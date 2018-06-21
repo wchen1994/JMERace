@@ -19,8 +19,13 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.simsilica.lemur.Button;
+import com.simsilica.lemur.Command;
+import com.simsilica.lemur.Container;
+import com.simsilica.lemur.GuiGlobals;
+import com.simsilica.lemur.Label;
+import com.simsilica.lemur.style.BaseStyles;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.builder.ScreenBuilder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import viewLayer.CarAdjustGuiController;
@@ -112,16 +117,37 @@ public class Main extends SimpleApplication {
         state.setDistance(4);
         state.setOffset(Vector3f.UNIT_Y);
         
-        NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(
-                assetManager,
-                inputManager,
-                audioRenderer,
-                viewPort);
-        Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE);
-        Logger.getLogger("NiftyInputEventHandlingLog").setLevel(Level.SEVERE);
-        nifty = niftyDisplay.getNifty();
-        nifty.fromXml("Interface/CarAdjustGui.xml", "start", new CarAdjustGuiController());
-        guiViewPort.addProcessor(niftyDisplay);
+//        NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(
+//                assetManager,
+//                inputManager,
+//                audioRenderer,
+//                viewPort);
+//        Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE);
+//        Logger.getLogger("NiftyInputEventHandlingLog").setLevel(Level.SEVERE);
+//        nifty = niftyDisplay.getNifty();
+//        nifty.fromXml("Interface/CarAdjustGui.xml", "start", new CarAdjustGuiController());
+//        guiViewPort.addProcessor(niftyDisplay);
+       
+        GuiGlobals.initialize(this);
+        BaseStyles.loadGlassStyle();
+        GuiGlobals.getInstance().getStyles().setDefaultStyle("glass");
+        // Create a simple container for our elements
+        Container myWindow = new Container();
+        guiNode.attachChild(myWindow);
+
+// Put it somewhere that we will see it.
+// Note: Lemur GUI elements grow down from the upper left corner.
+        myWindow.setLocalTranslation(300, 300, 0);
+
+// Add some elements
+        myWindow.addChild(new Label("Hello, World."));
+        Button clickMe = myWindow.addChild(new Button("Click Me"));
+        clickMe.addClickCommands(new Command<Button>() {
+            @Override
+            public void execute(Button source) {
+                System.out.println("The world is yours.");
+            }
+        });
     }
     
     private static void traversalGeom(Spatial spatial, Spatial root, int lv) {
